@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite --open --debug",
-    "dev host": "vite --open --host --port 443",
+    "dev host": "vite --open --host --port 443 --debug",
     "preview": "vite build && vite preview --open --host --port 443",
     "build": "vite build"
   },
