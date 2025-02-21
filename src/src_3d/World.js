@@ -61,15 +61,21 @@ export default class World {
     //   return Math.min(min, -cur.size.y / 2);
     // }, -models[0].size.y / 2);
     objects = await createObjects();
-    loop.updatables.push(...objects);
-    loop.updatables.push(...animationMixers);
-    loop.updatables.push(...animations);
     // skybox = await createSkybox();
 
     scene.add(...models);
     scene.add(...objects);
     // scene.add(skybox);
 
+    loop.updatables.push(...objects);
+    loop.updatables.push(...animationMixers);
+    loop.updatables.push(...animations);
+
+    resizer.update();
+  }
+
+  async initControls() {
+    await controls.init();
     resizer.update();
   }
 

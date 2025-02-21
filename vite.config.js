@@ -32,12 +32,6 @@ export default defineConfig({
       //   ws: true,
       //   changeOrigin: true,
       // },
-      '/models': {
-        target: `https://127.0.0.1/static`,
-        secure: false,
-        changeOrigin: false,
-        // rewrite: (path) => path.replace(/^\/models/, '/models/static'),
-      },
       '/api': {
         target: `http://127.0.0.1:9000`,
         secure: false,
