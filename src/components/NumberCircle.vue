@@ -2,6 +2,7 @@
 @require '../../styles/constants.styl'
 @require '../../styles/buttons.styl'
 @require '../../styles/fonts.styl'
+@require '../../styles/utils.styl'
 
 color = white
 //colorEmp = mix(transparent, red, 30%)
@@ -11,29 +12,30 @@ colorEmp = white
   overflow visible
   height var(--size)
   width var(--size)
-  .circle
-  .circle-shadow
-  .circle-animation
-  .circle-progress
-    stroke-linecap round
-    stroke-width 3
-    stroke color
+  .circles-group
     transform rotate(-90deg)
     transform-origin 50% 50%
-    fill none
-    r 50
-  .circle
-    stroke-width 2
-  .circle-progress
-    stroke-dasharray calc(var(--progress) * var(--math-pi) * 2 * 50) 1000
-    stroke-width 5
-    stroke colorEmp
-    transition stroke-dasharray 0.2s ease
-    filter blur(2px)
-  .circle-animation
-    stroke-width 0
-  .circle-shadow
-    filter blur(10px)
+    .circle
+    .circle-shadow
+    .circle-animation
+    .circle-progress
+      stroke-linecap round
+      stroke-width 3
+      stroke color
+      fill none
+      r 50
+    .circle
+      stroke-width 2
+    .circle-progress
+      stroke-dasharray calc(var(--progress) * var(--math-pi) * 2 * 50) 1000
+      stroke-width 5
+      stroke colorEmp
+      transition stroke-dasharray 0.2s ease
+      filter-blur(2px)
+    .circle-animation
+      stroke-width 0
+    .circle-shadow
+      filter-blur(10px)
 
   .text
     fill color
@@ -82,19 +84,21 @@ colorEmp = white
         0%
           r 50
           stroke-width 3
-          filter blur(0px)
+          filter-blur(0px)
         100%
           r 80
           stroke-width 0
-          filter blur(1px)
+          filter-blur(1px)
 </style>
 
 <template>
   <svg class="root-progress" viewBox="0 0 100 100" :style="{'--progress': progress, '--math-pi': MATH_PI, '--size': size}" :class="{animation: animationActive}">
-    <circle class="circle" r="50" cx="50" cy="50"></circle>
-    <circle class="circle-shadow" r="50" cx="50" cy="50"></circle>
-    <circle class="circle-progress" r="50" cx="50" cy="50"></circle>
-    <circle class="circle-animation" r="50" cx="50" cy="50"></circle>
+    <g class="circles-group">
+      <circle class="circle" r="50" cx="50" cy="50"></circle>
+      <circle class="circle-shadow" r="50" cx="50" cy="50"></circle>
+      <circle class="circle-progress" r="50" cx="50" cy="50"></circle>
+      <circle class="circle-animation" r="50" cx="50" cy="50"></circle>
+    </g>
     <text class="text" x="50" y="50" font-size="10" text-anchor="middle" dominant-baseline="middle">{{ value }}</text>
   </svg>
 </template>

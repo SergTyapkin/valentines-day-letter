@@ -47,22 +47,26 @@ class MyControls {
     this.canvas = canvas;
   }
 
-  async init() {
+  async init(requestPermissions = true) {
     this.camera.lookAt(this.target);
 
     window.addEventListener('mousemove', this._onMouseMove());
     window.addEventListener('wheel', this._onScroll(), {passive: false});
     window.addEventListener('mouseout', this._onMouseOver());
-    try {
-      if (window.DeviceOrientationEvent && 'ontouchstart' in window) {
-        await DeviceOrientationEvent.requestPermission();
-        window.addEventListener('deviceorientation', this._onDeviceOrientation());
-        console.log("DeviceOrientation controls successfully initialized")
-      } else {
-        console.log("DeviceOrientation not available on this device")
+    if (requestPermissions) {
+      try {
+        if (window.DeviceOrientationEvent && 'ontouchstart' in window) {
+          await DeviceOrientationEvent.requestPermission();
+          window.addEventListener('deviceorientation', this._onDeviceOrientation());
+          console.log("DeviceOrientation controls successfully initialized")
+        } else {
+          console.log("DeviceOrientation not available on this device")
+        }
+      } catch (err) {
+        console.error(`DeviceOrientation controls was not initialized: ${err}`);
       }
-    } catch (err) {
-      console.error(`DeviceOrientation controls was not initialized: ${err}`);
+    } else {
+      window.addEventListener('deviceorientation', this._onDeviceOrientation());
     }
 
     this.camera.position.set(...this.targetCameraPos);

@@ -1,4 +1,7 @@
 <style lang="stylus" scoped>
+@require '../../styles/constants.styl'
+@require '../../styles/utils.styl'
+
 color = white
 
 .root-progress
@@ -11,12 +14,10 @@ color = white
     stroke-width 3
     stroke color
     stroke-dasharray calc(var(--progress) * var(--math-pi) * 2 * 50) 1000
-    transform rotate(-90deg)
-    transform-origin 50% 50%
     fill none
     transition stroke-dasharray 0.2s ease
   .circle-shadow
-    filter blur(10px)
+    filter-blur(10px)
 
   .text
     fill color

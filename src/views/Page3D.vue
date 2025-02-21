@@ -134,7 +134,7 @@ export default {
         }
 
         // Init deviceorientation controls
-        await this.world.initControls();
+        await this.world.initControls(false);
       }
     }, 50);
 

@@ -34,3 +34,10 @@ pc-hidden()
 mobile-hidden()
     @media ({mobile})
         display none
+
+filter-blur(size)
+    transform translate3d(0, 0, 0)
+    -webkit-filter blur(size)
+    -moz-filter blur(size)
+    -ms-filter blur(size)
+    filter blur(size)

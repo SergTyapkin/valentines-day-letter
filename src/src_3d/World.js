@@ -74,8 +74,8 @@ export default class World {
     resizer.update();
   }
 
-  async initControls() {
-    await controls.init();
+  async initControls(requestPermissions = true) {
+    await controls.init(requestPermissions);
     resizer.update();
   }
 
