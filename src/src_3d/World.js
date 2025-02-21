@@ -30,6 +30,8 @@ let objects = [];
 let resizer;
 
 export default class World {
+  isRunning = false
+
   constructor(container) {
     camera = createCamera();
     scene = createScene();
@@ -73,10 +75,12 @@ export default class World {
 
   start() {
     loop.start();
+    this.isRunning = true;
   }
 
   stop() {
     loop.stop();
+    this.isRunning = false;
   }
 
   dispose() {

@@ -6,46 +6,61 @@
 
 .root-page-3d
   .loader
-  .progress
-  .button-reset
     centered-absolute-transform()
-  .progress
-    top 20%
-    pointer-events none
-  .progress-final
-    pointer-events auto
-  .button-reset
-    top 30px
+  .progress-block
+    position absolute
+    top 10px
+    left 50%
+    transform translateX(-50%)
+    display flex
+    flex-direction column
+    align-items center
+    gap 20px
+    .progress
+      pointer-events none
+    .progress-final
+      pointer-events auto
+    .button-reset
+      button()
+      width min-content
+      white-space nowrap
+      padding 10px 20px
+      background none
+  .button-stop-3d
     button()
     width min-content
-    white-space nowrap
-    padding 10px 20px
-    background none
+    position absolute
+    right 10px
+    bottom 10px
+    @media({mobile})
+      bottom 70px
 </style>
 
 <template>
   <div class="root-page-3d">
-    <transition name="opacity">
-      <NumberCircle
-        v-if="isLoaded && roundsCount < ROUNDS_NEEDED"
-        class="progress"
-        :value="`${roundsCount}/${ROUNDS_NEEDED}`"
-        size="200px"
-        :progress="roundProgress"
-      />
-    </transition>
-    <transition name="opacity">
-      <router-link :to="{name: 'finish'}">
+    <div class="progress-block">
+      <button class="button-reset" @click="resetRounds">Сбросить прогресс</button>
+      <transition name="opacity">
         <NumberCircle
-          v-if="isLoaded && roundsCount >= ROUNDS_NEEDED"
-          class="progress progress-final"
-          :value="`Жми сюда`"
+          v-if="isLoaded && roundsCount < ROUNDS_NEEDED"
+          class="progress"
+          :value="`${roundsCount}/${ROUNDS_NEEDED}`"
           size="200px"
-          :progress="0"
+          :progress="roundProgress"
         />
-      </router-link>
-    </transition>
-    <button class="button-reset" @click="resetRounds">Сбросить прогресс</button>
+      </transition>
+      <transition name="opacity">
+        <router-link :to="{name: 'finish'}">
+          <NumberCircle
+            v-if="isLoaded && roundsCount >= ROUNDS_NEEDED"
+            class="progress progress-final"
+            :value="`Жми сюда`"
+            size="200px"
+            :progress="0"
+          />
+        </router-link>
+      </transition>
+    </div>
 
     <div ref="rootThree3d" class="root-3d"></div>
     <transition name="opacity" class="loader">
@@ -56,6 +71,8 @@
         :progress="loadingProgress"
       />
     </transition>
+
+    <button class="button-stop-3d" @click="toggleRendering"><img src="/icons/invisible.svg" alt="unseen"></button>
   </div>
 </template>
 
@@ -70,7 +87,7 @@ import NumberCircle from "~/components/NumberCircle.vue";
 
 const ALPHA_TOLERANCE = 40;
 const MIN_ROUND_TIME_SEC = 1.8;
-const MAX_ROUND_TIME_SEC = 4;
+const MAX_ROUND_TIME_SEC = 5;
 const NO_PENALTY_MIN_TIME_SEC = 6;
 
 export default {
@@ -105,18 +122,20 @@ export default {
           this.saveRoundsToLocalStorage();
           const curTime = new Date();
           if (prevTime !== null) {
-            const diffSeconds = (prevTime.getSeconds() - curTime.getSeconds()) / 1000;
-            if (diffSeconds > MIN_ROUND_TIME_SEC && diffSeconds < MAX_ROUND_TIME_SEC) {
-              this.roundsCount++;
-            } else {
+            const diffSeconds = (curTime - prevTime) / 1000;
+            if (diffSeconds < MIN_ROUND_TIME_SEC) {
               this.roundsCount--;
+            } else if (diffSeconds < MAX_ROUND_TIME_SEC) {
+              this.roundsCount++;
             }
+          } else {
+            this.roundsCount++;
           }
           prevTime = curTime;
         }
         if (ev.alpha < ALPHA_TOLERANCE && prevAlpha > (360 - ALPHA_TOLERANCE)) {
           const curTime = new Date();
-          const diffSeconds = (prevTime.getSeconds() - curTime.getSeconds()) / 1000;
+          const diffSeconds = (curTime - prevTime) / 1000;
           if (diffSeconds < NO_PENALTY_MIN_TIME_SEC) {
             this.roundsCount--;
           }
@@ -168,6 +187,13 @@ export default {
       }
       localStorage.removeItem('rounds');
       this.roundsCount = 0;
+    },
+    toggleRendering() {
+      if (this.world.isRunning) {
+        this.world.stop();
+      } else {
+        this.world.start();
+      }
     }
   }
 }

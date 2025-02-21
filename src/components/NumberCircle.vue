@@ -4,7 +4,8 @@
 @require '../../styles/fonts.styl'
 
 color = white
-colorEmp = mix(transparent, red, 30%)
+//colorEmp = mix(transparent, red, 30%)
+colorEmp = white
 
 .root-progress
   overflow visible
@@ -25,7 +26,7 @@ colorEmp = mix(transparent, red, 30%)
     stroke-width 2
   .circle-progress
     stroke-dasharray calc(var(--progress) * var(--math-pi) * 2 * 50) 1000
-    stroke-width 3
+    stroke-width 5
     stroke colorEmp
     transition stroke-dasharray 0.2s ease
     filter blur(2px)
@@ -40,7 +41,6 @@ colorEmp = mix(transparent, red, 30%)
 
   &.animation
     .circle
-    .circle-progress
       animation circle .5s ease
       @keyframes circle
         0%
@@ -52,6 +52,18 @@ colorEmp = mix(transparent, red, 30%)
         100%
           r 50
           stroke-width 2
+    .circle-progress
+      animation circle-progress .5s ease
+      @keyframes circle-progress
+        0%
+          r 50
+          stroke-width 5
+        50%
+          r 53
+          stroke-width 7
+        100%
+          r 50
+          stroke-width 5
     .circle-shadow
       animation circle-shadow .7s ease
       @keyframes circle-shadow
