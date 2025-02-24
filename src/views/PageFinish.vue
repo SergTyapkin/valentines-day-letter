@@ -16,7 +16,6 @@
     color colorText1
     position relative
     animation form-in ease 2s
-    white-space nowrap
     @keyframes form-in
       0%
         max-width 0
