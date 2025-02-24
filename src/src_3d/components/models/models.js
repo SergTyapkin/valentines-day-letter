@@ -18,12 +18,12 @@ async function loadModels() {
   const loaderSTL = new STLLoader();
 
   const modelsGLTF = await Promise.all([
-    loaderGLTF.loadAsync('/models/animated_pretty_heart.glb'),
+    loaderGLTF.loadAsync('/models/heart_optimized_red.glb'),
   ]);
   TrackAsset(...modelsGLTF);
   const modelsSTL = await Promise.all([
     loaderSTL.loadAsync('/models/hearts_around.stl'),
-    loaderSTL.loadAsync('/models/pretty_heart.stl'),
+    loaderSTL.loadAsync('/models/heart_optimized.stl'),
   ]);
   TrackAsset(...modelsSTL);
 

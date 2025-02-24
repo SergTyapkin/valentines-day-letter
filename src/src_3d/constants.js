@@ -1,6 +1,6 @@
 import {isMobile} from '~/utils/utils';
 
-export const CAMERA_Z = 300;
+export const CAMERA_Z = 350;
 
 
 export const BEVEL_HEIGHT = 10;

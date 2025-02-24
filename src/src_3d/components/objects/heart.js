@@ -87,5 +87,5 @@ export async function createTetris() {
   const centerSphere = TrackAsset(new Mesh(sphereGeo, mat1));
 
   // return [centerSphere, ...totalMeshes];
-  return [centerSphere];
+  return [];
 }

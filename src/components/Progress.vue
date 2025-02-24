@@ -27,6 +27,7 @@ color = white
     .circle
     .circle-shadow
       animation rotating 15s linear running infinite
+      transform-origin 50% 50%
       @keyframes rotating {
         from {
           transform rotate(-90deg)
