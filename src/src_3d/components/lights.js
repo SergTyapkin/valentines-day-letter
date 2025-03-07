@@ -1,5 +1,6 @@
 import {DirectionalLight, HemisphereLight, AmbientLight, SpotLight} from "three";
 
+
 function createLights() {
   const ambientLight = new HemisphereLight(
     0xFFEEBB,

@@ -1,18 +1,18 @@
-import { loadModels } from './components/models/models.js';
+import { createModels, loadableObjects as modelsLoadableObjects } from './components/models/models.js';
 import { createCamera } from './components/camera.js';
 import { createLights } from './components/lights.js';
 import { createScene } from './components/scene.js';
 import { createObjects } from './components/objects/objects.js';
 
 import { createControls } from './systems/Controls.js';
-import {createComposer} from './systems/Renderer.js';
+import { createComposer } from './systems/Renderer.js';
 import { Resizer } from './systems/Resizer.js';
 import { Loop } from './systems/Loop.js';
-import {BoxGeometry, BoxHelper, Mesh, SpotLightHelper} from "three";
-import {updateSize} from "./components/models/setupModel.js";
-import {createSkybox} from "./components/skybox.js";
+import { BoxGeometry, BoxHelper, Mesh, SpotLightHelper } from "three";
+import { updateSize } from "./components/models/setupModel.js";
+import { createSkybox, loadableObjects as skyboxLoadableObjects } from "./components/skybox.js";
 import AssetsTrackerLoader from "~/src_3d/AssetsTrackerLoader";
-import {createAnimations} from "~/src_3d/components/animations";
+import { createAnimations } from "~/src_3d/components/animations";
 
 
 let camera;
@@ -51,8 +51,20 @@ export default class World {
     resizer = new Resizer(container, camera, renderer, composer);
   }
 
+  async loadAllResources() {
+    AssetsTrackerLoader.startAllLoads();
+    for (const loadableObjects of [modelsLoadableObjects, skyboxLoadableObjects]) {
+      for (const key of Object.keys(loadableObjects)) {
+        loadableObjects[key] = await loadableObjects[key];
+        console.debug("Check loading resource:", key, loadableObjects[key])
+      }
+    }
+  }
+
   async init() {
-    const {models: loadedModels, animations: loadedAnimations} = await loadModels();
+    await this.loadAllResources();
+
+    const {models: loadedModels, animations: loadedAnimations} = createModels();
     models = loadedModels;
     animationMixers = loadedAnimations;
     // scene.add(new BoxHelper(models[0]));
@@ -60,7 +72,7 @@ export default class World {
     //   updateSize(cur);
     //   return Math.min(min, -cur.size.y / 2);
     // }, -models[0].size.y / 2);
-    objects = await createObjects();
+    objects = createObjects();
     // skybox = await createSkybox();
 
     scene.add(...models);

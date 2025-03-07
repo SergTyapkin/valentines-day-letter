@@ -1,12 +1,11 @@
 import {updateSize} from "~/src_3d/components/models/setupModel";
 import {createBox} from "./box.js";
-import {createTetris} from "./heart";
 
-export async function createObjects() {
+export function createObjects() {
   return (
-    await createBox()
+    createBox()
   ).concat(
-    await createTetris()
+    // createTetris()
   ).map((obj) => {
     // obj.receiveShadow = true;
     // obj.castShadow = true;

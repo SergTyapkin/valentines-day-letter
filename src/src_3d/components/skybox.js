@@ -5,18 +5,18 @@ import {
   MeshBasicMaterial,
   TextureLoader
 } from "three";
+import {Load} from "~/src_3d/AssetsTrackerLoader";
 
-export async function createSkybox() {
-  const loader = new TextureLoader();
-  const path = "./assets/skyboxes/cliffs/";
-  const extension = ".png";
-  const imageNames = ["ft", "bk", "up", "dn", "rt", "lf"];
 
-  const textures = await Promise.all(
-      imageNames.map((name) => loader.loadAsync(path + name + extension))
-  );
+const path = "./assets/skyboxes/cliffs/";
+const extension = ".png";
+const imageNames = ["ft", "bk", "up", "dn", "rt", "lf"];
+const loadableObjects = {};
+// imageNames.forEach((name) => loadableObjects[name] = Load(TextureLoader, path + name + extension));
 
-  const materialArray = textures.map((texture) => {
+function createSkybox() {
+
+  const materialArray = Object.values(loadableObjects).map((texture) => {
     const material = new MeshBasicMaterial( { map: texture });
     material.side = BackSide;
     return material;
@@ -26,3 +26,5 @@ export async function createSkybox() {
 
   return new Mesh(skyboxGeo, materialArray);
 }
+
+export {createSkybox, loadableObjects};

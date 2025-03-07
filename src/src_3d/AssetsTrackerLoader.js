@@ -156,6 +156,10 @@ class _AssetsTrackerLoaderClass extends Singleton {
     this.loadableObjects.forEach((obj) => {
       this._loadObject(obj);
     });
+    return this.waitAllLoads();
+  }
+
+  waitAllLoads() {
     return this.allLoadsPromise;
   }
 

@@ -13,23 +13,18 @@ import TEXTURE_NORMAL_MAP_ROUGH_MATERIAL_URL from "../../../../static/images/nor
 import {RGBELoader} from "three/addons/loaders/RGBELoader";
 import TEXTURE_ENV_MAP_EMPTY_WAREHOUSE_URL from "../../../../static/images/environment_maps/empty_warehouse.hdr";
 
-async function loadModels() {
-  const loaderGLTF = new GLTFLoader();
-  const loaderSTL = new STLLoader();
+const loadableObjects = {
+  heartGLB: Load(GLTFLoader, '/models/heart_optimized_red.glb'),
+  heartsAroundSTL: Load(STLLoader, '/models/hearts_around.stl'),
+  heartSTL: Load(STLLoader, '/models/heart_optimized.stl'),
+  roughMaterialNormalMap: Load(TextureLoader, TEXTURE_NORMAL_MAP_ROUGH_MATERIAL_URL),
+  emptyWarehouseEnvMap: Load(RGBELoader, TEXTURE_ENV_MAP_EMPTY_WAREHOUSE_URL),
+};
 
-  const modelsGLTF = await Promise.all([
-    loaderGLTF.loadAsync('/models/heart_optimized_red.glb'),
-  ]);
-  TrackAsset(...modelsGLTF);
-  const modelsSTL = await Promise.all([
-    loaderSTL.loadAsync('/models/hearts_around.stl'),
-    loaderSTL.loadAsync('/models/heart_optimized.stl'),
-  ]);
-  TrackAsset(...modelsSTL);
-
+function createModels() {
   const modelsObjects = [];
   const animationMixersObjects = [];
-  modelsGLTF.forEach((data, idx) => {
+  [loadableObjects.heartGLB].forEach((data, idx) => {
     const [model, animation] = setupModel(data);
     const mixer = new AnimationMixer(model);
     const action = mixer.clipAction(animation);
@@ -41,13 +36,9 @@ async function loadModels() {
     animationMixersObjects.push(mixer);
   });
 
-  const [textureNormalMapRoughMaterial, textureEnvMapEmptyWarehouse] = await Promise.all([
-    Load(TextureLoader, TEXTURE_NORMAL_MAP_ROUGH_MATERIAL_URL),
-    Load(RGBELoader, TEXTURE_ENV_MAP_EMPTY_WAREHOUSE_URL),
-  ]);
-  textureNormalMapRoughMaterial.wrapS = RepeatWrapping;
-  textureNormalMapRoughMaterial.wrapT = RepeatWrapping;
-  textureEnvMapEmptyWarehouse.mapping = EquirectangularReflectionMapping;
+  loadableObjects.roughMaterialNormalMap.wrapS = RepeatWrapping;
+  loadableObjects.roughMaterialNormalMap.wrapT = RepeatWrapping;
+  loadableObjects.emptyWarehouseEnvMap.mapping = EquirectangularReflectionMapping;
 
   const mat1 = TrackAsset(new MeshPhongMaterial({
     color: 0xEE3399,
@@ -64,24 +55,24 @@ async function loadModels() {
     // sheen: 1,
     // sheenRoughness: 0.3,
     // sheenColor: 0xFF5555,
-    envMap: textureEnvMapEmptyWarehouse,
+    envMap: loadableObjects.emptyWarehouseEnvMap,
     envMapIntensity: 1,
-    normalMap: textureNormalMapRoughMaterial,
-    clearcoatNormalMap: textureNormalMapRoughMaterial,
+    normalMap: loadableObjects.roughMaterialNormalMap,
+    clearcoatNormalMap: loadableObjects.roughMaterialNormalMap,
     normalScale: new Vector2(.2, .2),
     clearcoatNormalScale: new Vector2(10, 10),
   }));
 
-  const heartsAround = TrackAsset(new Mesh(modelsSTL[0], mat1));
+  const heartsAround = TrackAsset(new Mesh(loadableObjects.heartsAroundSTL, mat1));
   heartsAround.rotation.x = -Math.PI / 180 * 90;
   modelsObjects.push(heartsAround);
 
-  const heartGlass = TrackAsset(new Mesh(modelsSTL[1], mat2));
+  const heartGlass = TrackAsset(new Mesh(loadableObjects.heartSTL, mat2));
   heartGlass.rotation.x = -Math.PI / 180 * 90;
-  heartGlass.scale.multiplyScalar(1.1);
+  heartGlass.scale.multiplyScalar(1.13);
   modelsObjects.push(heartGlass);
 
   return {models: modelsObjects, animations: animationMixersObjects}
 }
 
-export { loadModels };
+export { createModels, loadableObjects };
