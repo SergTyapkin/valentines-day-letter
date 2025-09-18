@@ -1,4 +1,4 @@
-![GithubCI](https://github.com/sergtyapkin/valentines-day-letter/actions/workflows/deploy.yml/badge.svg)
+# [👉 LIVE DEMO 👈](https://sergtyapkin.github.io/valentines-day-letter/)
 
 # Красивое бьющееся 3D-сердце на Three.js с управлением ориентацией устройства
 Цель мини-игры - сделать 200 оборотов вокруг своей оси. Крутить телефон не получится - есть небольшой античит.
